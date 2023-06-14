@@ -14,11 +14,18 @@ namespace StazhirovkaZadanie2
         public DbSet<LoginsHistory> LoginsHistory { get; set; }
         public ApplicationContext()
         {
-            //Database.EnsureCreated();
+        }
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<Role>().HasIndex(b => b.Name);
+            modelBuilder.Entity<User>().HasIndex(b => b.RoleId);
+            modelBuilder.Entity<User>().HasIndex(b => b.Login).IsUnique();
+            modelBuilder.Entity<LoginsHistory>().HasIndex(b => b.UserId);
         }
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             optionsBuilder.UseNpgsql("Host=localhost;Port=5432;Database=SportDB;Username=postgres;Password=12345");
         }
+
     }
 }
